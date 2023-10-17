@@ -21,7 +21,7 @@ load_dotenv(".env")
 url = os.getenv("NEO4J_URI")
 username = os.getenv("NEO4J_USERNAME")
 password = os.getenv("NEO4J_PASSWORD")
-ollama_base_url = os.getenv("OLLAMA_BASE_URL")
+model_repo_base_url = os.getenv("MODEL_REPO_BASE_URL")
 embedding_model_name = os.getenv("EMBEDDING_MODEL")
 llm_name = os.getenv("LLM")
 # Remapping for Langchain Neo4j integration
@@ -31,7 +31,7 @@ logger = get_logger(__name__)
 
 
 embeddings, dimension = load_embedding_model(
-    embedding_model_name, config={"ollama_base_url": ollama_base_url}, logger=logger
+    embedding_model_name, config={"model_repo_base_url": model_repo_base_url}, logger=logger
 )
 
 
@@ -45,7 +45,7 @@ class StreamHandler(BaseCallbackHandler):
         self.container.markdown(self.text)
 
 
-llm = load_llm(llm_name, logger=logger, config={"ollama_base_url": ollama_base_url})
+llm = load_llm(llm_name, logger=logger, config={"model_repo_base_url": model_repo_base_url})
 
 
 def main():
