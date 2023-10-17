@@ -1,10 +1,12 @@
 #syntax = docker/dockerfile:1.4
 
-FROM ollama/ollama:latest AS ollama
+FROM ollama/ollama:latest AS model 
+# FROM huggingface/huggingface:latest AS model
 FROM babashka/babashka:latest
 
 # just using as a client - never as a server
-COPY --from=ollama /bin/ollama ./bin/ollama
+# HME-2023-10-17: this needs a fix to model
+COPY --from=model /bin/ollama ./bin/ollama
 
 COPY pull_model.clj pull_model.clj
 
