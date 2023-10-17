@@ -1,5 +1,5 @@
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.embeddings import OllamaEmbeddings, SentenceTransformerEmbeddings
+from langchain.embeddings import OllamaEmbeddings, HuggingFaceEmbeddings, SentenceTransformerEmbeddings
 from langchain.chat_models import ChatOpenAI, ChatOllama
 from langchain.vectorstores.neo4j_vector import Neo4jVector
 from langchain.chains import RetrievalQAWithSourcesChain
@@ -15,9 +15,13 @@ from utils import BaseLogger
 
 def load_embedding_model(embedding_model_name: str, logger=BaseLogger(), config={}):
     if embedding_model_name == "ollama":
-        embeddings = OllamaEmbeddings(base_url=config["ollama_base_url"], model="llama2")
+        embeddings = OllamaEmbeddings(base_url=config["model_repo_base_url"], model="llama2")
         dimension = 4096
         logger.info("Embedding: Using Ollama")
+    elif embedding_model_name == "huggingface":
+        embeddings = HuggingFaceEmbeddings(base_url=config["model_repo_base_url"], model"llama2")
+        dimension = 4096
+        logger.info("Embedding: Using HuggingFace")
     elif embedding_model_name == "openai":
         embeddings = OpenAIEmbeddings()
         dimension = 1536
@@ -42,7 +46,19 @@ def load_llm(llm_name: str, logger=BaseLogger(), config={}):
         logger.info(f"LLM: Using Ollama: {llm_name}")
         return ChatOllama(
             temperature=0,
-            base_url=config["ollama_base_url"],
+            base_url=config["model_repo_base_url"],
+            model=llm_name,
+            streaming=True,
+            # seed=2,
+            top_k=10,  # A higher value (100) will give more diverse answers, while a lower value (10) will be more conservative.
+            top_p=0.3,  # Higher value (0.95) will lead to more diverse text, while a lower value (0.5) will generate more focused text.
+            num_ctx=3072,  # Sets the size of the context window used to generate the next token.
+        )
+    elif len(llm_name):
+        logger.info(f"LLM: Using HuggingFace: {llm_name}")
+        return ChatHuggingFace(
+            temperature=0,
+            base_url=config["model_repo_base_url"],
             model=llm_name,
             streaming=True,
             # seed=2,
