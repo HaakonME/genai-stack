@@ -27,7 +27,7 @@ load_dotenv(".env")
 url = os.getenv("NEO4J_URI")
 username = os.getenv("NEO4J_USERNAME")
 password = os.getenv("NEO4J_PASSWORD")
-ollama_base_url = os.getenv("OLLAMA_BASE_URL")
+model_repo_base_url = os.getenv("MODEL_REPO_BASE_URL") # HME-2023-10-17 changed from OLLAMA to allow HUGGINGFACE
 embedding_model_name = os.getenv("EMBEDDING_MODEL")
 llm_name = os.getenv("LLM")
 # Remapping for Langchain Neo4j integration
@@ -35,7 +35,7 @@ os.environ["NEO4J_URL"] = url
 
 embeddings, dimension = load_embedding_model(
     embedding_model_name,
-    config={ollama_base_url: ollama_base_url},
+    config={model_repo_base_url: model_repo_base_url},
     logger=BaseLogger(),
 )
 
@@ -44,7 +44,7 @@ neo4j_graph = Neo4jGraph(url=url, username=username, password=password)
 create_vector_index(neo4j_graph, dimension)
 
 llm = load_llm(
-    llm_name, logger=BaseLogger(), config={"ollama_base_url": ollama_base_url}
+    llm_name, logger=BaseLogger(), config={"model_repo_base_url": model_repo_base_url}
 )
 
 llm_chain = configure_llm_only_chain(llm)
