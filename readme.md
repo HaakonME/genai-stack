@@ -1,4 +1,6 @@
 # GenAI Stack
+# WARNING: THIS BRANCH IS NOT WORKING. It is a work in progress to allow models from Hugging Face or other repos than Ollama.
+# This branch is motivated by the lack of Norwegian LLMs in Ollama's library while there are many in Hugging Face's library.
 This GenAI application stack will get you started building your
 own GenAI application in no time.
 The demo applications can serve as inspiration or as a starting point.
